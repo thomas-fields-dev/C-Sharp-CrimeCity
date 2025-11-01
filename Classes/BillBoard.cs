@@ -10,7 +10,7 @@ namespace CrimeCity.Classes
     {
         public static void NiteCityBillboard()
         {
-            Console.WriteLine("Welcome To Trapper City!");
+            Console.WriteLine("Welcome To Trapper Town!");
         }
 
         public static void EdgeRunnerBillboard(this EdgeRunner edgeRunner)
