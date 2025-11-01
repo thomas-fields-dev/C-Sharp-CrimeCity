@@ -69,7 +69,6 @@ namespace CrimeCity.Classes
                 bool isPlayerBelow = player.Coordinate.Y > Coordinate.Y;
                 bool isSameRow = player.Coordinate.Y == Coordinate.Y;
                 bool isSameColumn = player.Coordinate.X == Coordinate.X;
-                // Console.WriteLine($"isPlayerAbove {isPlayerAbove}, isPlayerBelow {isPlayerBelow}, isPlayerEqual {isPlayerEqual}, moveRobberLeft {moveRobberLeft}, moveRobberRight {moveRobberRight}, isSameColumm: {isSameColumn}");
 
                 int newPosition = 0;
 
@@ -127,10 +126,8 @@ namespace CrimeCity.Classes
                             }
                             occupiedAroundPlayer.Add(0);
                         }
-                        occupiedAroundPlayer.ForEach(delegate (int o) { Console.WriteLine(o); });
                         List<int> unoccupiedAroundPlayer = new List<int>();
                         unoccupiedAroundPlayer = Config.ValidProximities.Except(occupiedAroundPlayer.ToArray()).ToList();
-                        unoccupiedAroundPlayer.ForEach(delegate (int u) { Console.WriteLine($"unoccupied {u}"); });
 
                         List<int> legalPositionsAroundPlayer = CheckBoundrys(unoccupiedAroundPlayer, player.Position);
 
