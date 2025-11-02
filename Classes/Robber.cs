@@ -33,7 +33,7 @@ namespace CrimeCity.Classes
                 }
             }
 
-            if (Table.Turn > 1)
+            if (Table.Turn > 0)
             {
                 int playerRow = 0;
                 int robberRow = 0;
@@ -214,7 +214,7 @@ namespace CrimeCity.Classes
                     }
                     else if (!isSameRow && isSameColumn && isPlayerBelow)
                     {
-                        int[] validMoves = [9, 11, -1];
+                        int[] validMoves = [9, 11, -1, 1, 10];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
 
@@ -292,7 +292,7 @@ namespace CrimeCity.Classes
                     ExLogger.Log($"-9", true);
                     if (!isSameRow && !isSameColumn && moveRobberRight && isPlayerAbove)
                     {
-                        int[] validMoves = [1, 10];
+                        int[] validMoves = [-10, -9];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
                 }
@@ -319,8 +319,18 @@ namespace CrimeCity.Classes
                         }
                     }
                 });
-                rnadomMove = moves[Table.Random.Next(0, moves.Count())];
-                if (attemptes > 20)
+                if (moves.Any())
+                {
+                    {
+                        rnadomMove = moves[Table.Random.Next(0, moves.Count())];
+                    }
+                    if (attemptes > 20)
+                    {
+                        rnadomMove = 0;
+                        break;
+                    }
+                }
+                else
                 {
                     rnadomMove = 0;
                     break;
@@ -330,7 +340,7 @@ namespace CrimeCity.Classes
             return rnadomMove;
         }
 
-        private List<int> CheckBoundrys(List<int> positions, int position, bool useRobberPositions = false)
+        public static List<int> CheckBoundrys(List<int> positions, int position, bool useRobberPositions = false)
         {
             int[] Yright = [-9, 1, 11];
             int[] Yleft = [-11, -1, 9];
@@ -342,27 +352,30 @@ namespace CrimeCity.Classes
             List<int> legalPositions = new List<int>();
             foreach (var validPosition in positions)
             {
-                int newValidPosition = position + validPosition;
+                 int newValidPosition = position + validPosition;
                 bool upperBound = newValidPosition > 0 && position > -1 && position < 10;
                 bool lowerBound = newValidPosition < 99 && position > 89 && position < 100;
                 bool inRange = newValidPosition > -1 && newValidPosition < 100;
                 bool isBorderPosition = Table.RightBorder.Contains(newValidPosition) || Table.LeftBoarder.Contains(newValidPosition);
-                if (upperBound && !isBorderPosition)
+                bool isWarpPosition = 
+                    Table.LeftBoarder.Contains(position) && Table.RightBorder.Contains(newValidPosition) || 
+                    Table.RightBorder.Contains(position) && Table.LeftBoarder.Contains(newValidPosition);
+                if (upperBound && !isBorderPosition && !isWarpPosition && inRange)
                 {
                     legalPositions.Add(validPosition);
                     ExLogger.Log($"*2 {validPosition}:{newValidPosition} ", true);
                 }
-                else if (lowerBound && !isBorderPosition)
+                else if (lowerBound && !isBorderPosition && !isWarpPosition && inRange)
                 {
                     legalPositions.Add(validPosition);
                     ExLogger.Log($"*2.0 {validPosition}:{position + validPosition} ", true);
                 }
-                else if (!Yleft.Contains(validPosition) && (Table.LeftBoarder.Contains(position) && inRange))
+                else if (!Yleft.Contains(validPosition) && (Table.LeftBoarder.Contains(position) && inRange) && !isWarpPosition)
                 {
                     legalPositions.Add(validPosition);
                     ExLogger.Log($"*0 {validPosition}:{position + validPosition} ", true);
                 }
-                else if (!Yright.Contains(validPosition) && (Table.RightBorder.Contains(position) && inRange))
+                else if (!Yright.Contains(validPosition) && (Table.RightBorder.Contains(position) && inRange) && !isWarpPosition)
                 {
                     legalPositions.Add(validPosition);
                     ExLogger.Log($"*1 {validPosition}:{position + validPosition}  ", true);
@@ -372,17 +385,17 @@ namespace CrimeCity.Classes
                     legalPositions.Add(validPosition);
                     ExLogger.Log($"*1 {validPosition}:{position + validPosition}  ", true);
                 }
-                else if (RobberPositions != null && !RobberPositions.Contains(newValidPosition) && useRobberPositions && !isBorderPosition)
+                else if (RobberPositions != null && !RobberPositions.Contains(newValidPosition) && useRobberPositions && !isBorderPosition && !isWarpPosition && inRange)
                 {
                     legalPositions.Add(validPosition);
                     ExLogger.Log($"*1 {validPosition}:{position + validPosition}  ", true);
                 }
-                else if (RobberPositions != null && !RobberPositions.Contains(newValidPosition) && isBorderPosition)
+                else if (RobberPositions != null && !RobberPositions.Contains(newValidPosition) && isBorderPosition && !isWarpPosition && inRange)
                 {
                     legalPositions.Add(validPosition);
                     ExLogger.Log($"*1 {validPosition}:{position + validPosition}  ", true);
                 }
-                else if (RobberPositions != null && !RobberPositions.Contains(newValidPosition) && useRobberPositions && isBorderPosition)
+                else if (RobberPositions != null && !RobberPositions.Contains(newValidPosition) && useRobberPositions && isBorderPosition && inRange && !isWarpPosition)
                 {
                     legalPositions.Add(validPosition);
                     ExLogger.Log($"*1 {validPosition}:{position + validPosition}  ", true);

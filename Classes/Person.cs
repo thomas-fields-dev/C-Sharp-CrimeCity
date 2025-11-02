@@ -26,7 +26,17 @@ namespace CrimeCity.Classes
             if (Life > 0)
                 Console.WriteLine("Whats your move? q,w,e,a,s,d,z,x,c,i\nor l to leave");
 
-            string input = Console.ReadLine();
+            string input = "";
+            if (Config.MoveMentTest)
+            {
+                string[] inputs = ["q", "w", "e", "a", "s", "d", "z", "x", "c"];
+                input = inputs[Table.Random.Next(0, inputs.Length)].ToString();
+            }
+            else
+            {
+                input = Console.ReadLine();
+            }
+                
             Move(table, player, edgeRunner, robbers, input);
             return input;
         }

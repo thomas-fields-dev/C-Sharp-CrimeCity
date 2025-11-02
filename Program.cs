@@ -16,6 +16,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        Billboard.NiteCityBillboard();
         Table table = new Table();
         table.FillTable();
         Person player = new Person();
@@ -43,6 +44,32 @@ public class Program
             Table.Stats(player, robbers);
             table.Draw(player, edgeRunner, robbers);
 
+            if (Config.MoveMentTest)
+            {
+                Thread.Sleep(100);
+                List<int> occupiedAroundPlayer = new List<int>();
+                foreach (int vp in Config.ValidProximities)
+                {
+                    foreach (int p in Robber.RobberPositions)
+                    {
+                        if (p == player.Position + vp)
+                        {
+                            occupiedAroundPlayer.Add(vp);
+                        }
+                    }
+                    occupiedAroundPlayer.Add(0);
+                }
+                List<int> unoccupiedAroundPlayer = new List<int>();
+                unoccupiedAroundPlayer = Config.ValidProximities.Except(occupiedAroundPlayer.ToArray()).ToList();
+
+                List<int> legalPositionsAroundPlayer = Robber.CheckBoundrys(unoccupiedAroundPlayer, player.Position);
+
+                if (!legalPositionsAroundPlayer.Any())
+                {
+                    player.Position = Table.Random.Next(0, 101);
+                }
+            }
+
             Console.WriteLine(Table.Message);
 
             Table.Message = "";
@@ -52,12 +79,13 @@ public class Program
 
             ExLogger.Log("", true);
 
-            Console.WriteLine("Old Moves:");
-            table.Draw(player, edgeRunner, robbers);
+            //Console.WriteLine("Old Moves:");
+            //table.Draw(player, edgeRunner, robbers);
             Console.WriteLine();
 
             //ExLogger.Display();
             ExLogger.Clear();
+
         }
     }
 }

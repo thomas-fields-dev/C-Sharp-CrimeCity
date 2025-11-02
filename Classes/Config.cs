@@ -13,5 +13,6 @@ namespace CrimeCity.Classes
         public static int[] ValidProximities = [-11, -10, -9, -1, 0, 1, 9, 10, 11];
         public static string[,] Weapons = { { "axe", "500" }, { "knife", "300" }, { "bat", "150" }, { "fist", "50" } };
         public static bool TestMode = false;
+        public static bool MoveMentTest = false;
     }
 }

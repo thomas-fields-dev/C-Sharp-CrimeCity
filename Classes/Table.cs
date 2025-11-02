@@ -94,7 +94,6 @@ namespace CrimeCity.Classes
 
         public static void Stats(Person player, Person[] robbers)
         {
-            Billboard.NiteCityBillboard();
             Console.WriteLine($"Cash: {player.BankAccount}$$");
             //Console.WriteLine($"Location: {player.Position}");
             Console.WriteLine($"Bonus: {Money.Amount}$$");
