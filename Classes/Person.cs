@@ -18,7 +18,7 @@ namespace CrimeCity.Classes
         public string LastName { get; set; }
         public int Position { get; set; }
         public int BankAccount { get; set; }
-        public int Life { get; set; } = 10000000;
+        public int Life { get; set; } = Config.LifePoints;
         public Coordinate Coordinate { get; set; }
 
         public string Input(Table table, Person player, EdgeRunner edgeRunner, Robber[] robbers)
@@ -130,7 +130,7 @@ namespace CrimeCity.Classes
                     {
                         string hireMe = "";
                         edgeRunner.EdgeRunnerBillboard();
-                        Console.WriteLine($"Do you wanna hire {edgeRunner.FirstName}? Enter Y or N");
+                        Console.WriteLine($"Do you wanna hire {edgeRunner.FirstName} {edgeRunner.LastName}? Enter Y or N");
                         hireMe = Console.ReadLine();
                         switch (hireMe.ToUpper())
                         {
@@ -141,7 +141,7 @@ namespace CrimeCity.Classes
                                     BankAccount -= edgeRunner.Price;
                                 }
                                 else
-                                    Table.Message += $"You cant afford {edgeRunner.FirstName}!\n";
+                                    Table.Message += $"You cant afford {edgeRunner.FirstName} {edgeRunner.LastName}!\n";
                                 break;
                             case "N":
                                 Table.Message += $"Fuck you {edgeRunner.FirstName}!\n";
@@ -152,6 +152,7 @@ namespace CrimeCity.Classes
                     }
                     else if (Position == Money.Position)
                     {
+                        Money.Position = -1;
                         BankAccount += Money.Amount;
                         Table.Message = $"You just found {Money.Amount}$$, Lucky Dog!\n";
                         Money.Amount = 0;

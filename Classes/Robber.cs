@@ -90,7 +90,7 @@ namespace CrimeCity.Classes
                 else if (isPlayerBelow && moveRobberRight)
                     newPosition = 11;
 
-                if (Table.Turn % 1 != 0)
+                if (Table.Turn % Config.RobberSpeed != 0)
                     newPosition = 0;
 
                 if (Position + newPosition == player.Position)

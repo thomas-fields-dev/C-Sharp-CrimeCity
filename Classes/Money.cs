@@ -12,11 +12,19 @@ namespace CrimeCity.Classes
         public static int Amount { get; set; } = Table.Random.Next(1, 5000);
         public static void Draw()
         {
-            if (Amount == 0 && Table.Turn == Table.Random.Next(1, Table.Turn * 2))
+            if (Table.Turn == 1)
             {
-                Position = Table.Random.Next(1, 100);
-                Amount = Table.Random.Next(1, 5000);
+                GenerateBag();
             }
+            else if (Table.Random.Next(1, 20) == 1 && Position == -1)
+            {
+                GenerateBag();
+            }
+        }
+        public static void GenerateBag()
+        {
+            Position = Table.Random.Next(1, 100);
+            Amount = Table.Random.Next(1, Config.Wallet);
         }
     }
 }

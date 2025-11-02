@@ -18,7 +18,7 @@ namespace CrimeCity.Classes
             StringBuilder sb = new StringBuilder();
             sb.Append(edgeRunner);
             sb.Append("\n");
-            sb.Append($"Hire {edgeRunner.FirstName} for {edgeRunner.Price}$$");
+            sb.Append($"Hire {edgeRunner.FirstName} {edgeRunner.LastName} for {edgeRunner.Price}$$");
             sb.Append("\n");
             Console.WriteLine(sb.ToString());
         }
