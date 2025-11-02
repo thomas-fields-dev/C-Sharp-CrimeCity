@@ -177,7 +177,7 @@ namespace CrimeCity.Classes
                     }
                     else if (isSameRow && !isSameColumn && moveRobberLeft)
                     {
-                        int[] validMoves = [9, -10, 10, -11];
+                        int[] validMoves = [-11, -1, 9, 10, 10];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
                 }
@@ -239,7 +239,7 @@ namespace CrimeCity.Classes
                     }
                     else if (isSameRow && !isSameColumn && moveRobberRight)
                     {
-                        int[] validMoves = [-10, -9, 1, 10, -9, 11];
+                        int[] validMoves = [10, -10, -9, 1, 11];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
                     else if (!isSameRow && isSameColumn && isPlayerAbove)
@@ -302,18 +302,31 @@ namespace CrimeCity.Classes
 
         private int GetRandomValidMove(List<int> legalPositions, int[] validMoves)
         {
+            int attemptes = 0;
             List<int> moves = new List<int>();
-            legalPositions.ForEach(delegate (int l)
+            int rnadomMove = 0;
+            do
             {
-                foreach (int move in validMoves)
+                attemptes++;
+                moves.Clear();
+                legalPositions.ForEach(delegate (int l)
                 {
-                    if (l == move)
+                    foreach (int move in validMoves)
                     {
-                        moves.Add(l);
+                        if (l == move)
+                        {
+                            moves.Add(l);
+                        }
                     }
+                });
+                rnadomMove = moves[Table.Random.Next(0, moves.Count())];
+                if (attemptes > 20)
+                {
+                    rnadomMove = 0;
+                    break;
                 }
-            });
-            int rnadomMove = moves[Table.Random.Next(0, moves.Count())];
+            }
+            while (Position + rnadomMove < -1 || Position + rnadomMove > 100);
             return rnadomMove;
         }
 

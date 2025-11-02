@@ -30,7 +30,7 @@ namespace CrimeCity.Classes
         public void DrawTiles(int positionOnMap, Person player, EdgeRunner edgeRunner, Robber[] robbers)
         {
             if (Config.TestMode)
-                Console.Write(positionOnMap);
+                Console.Write($"{positionOnMap} ");
             else
             {
                 foreach (Robber robber in robbers)
