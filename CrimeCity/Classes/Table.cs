@@ -26,6 +26,8 @@ namespace CrimeCity.Classes
         public static int[] Borders = new int[38];
         public static int[] RightBorder = new int[10];
         public static int[] LeftBoarder = new int[10];
+        public static int[] BottomBorder = new int[10];
+        public static int[] TopBoarder = new int[10];
 
         public void DrawTiles(int positionOnMap, Person player, EdgeRunner edgeRunner, Robber[] robbers)
         {
@@ -62,14 +64,21 @@ namespace CrimeCity.Classes
             int borderIndex = 0;
             int leftBorderIndex = 0;
             int rightBorderIndex = 0;
+            int topBorderIndex = 0;
+            int bottomBorderIndex = 0;
 
             int count = 0;
             for (int a = 0; a < Rows.Length; a++)
             {
                 bool markBorder = false;
-
+                bool firstRows = false;
+                bool lastRows = false;
                 if (Rows.Last() == a || Rows.First() == a)
                     markBorder = true;
+                if (Rows.First() == a)
+                    firstRows = true;
+                if (Rows.Last() == a)
+                    lastRows = true;
                 for (int b = 0; b < Columns.Length; b++)
                 {
                     int positionOnMap = count + b;
@@ -84,6 +93,14 @@ namespace CrimeCity.Classes
                     if (Columns.Last() == b)
                     {
                         RightBorder[rightBorderIndex++] = positionOnMap;
+                    }
+                    if (firstRows)
+                    {
+                        TopBoarder[topBorderIndex++] = positionOnMap;
+                    }
+                    if (lastRows)
+                    {
+                        BottomBorder[bottomBorderIndex++] = positionOnMap;
                     }
                     DrawTiles(positionOnMap, player, edgeRunner, robbers);
                 }
