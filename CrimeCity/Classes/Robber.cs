@@ -174,12 +174,17 @@ namespace CrimeCity.Classes
                         int[] validMoves = [-11, -10, -9, 9];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
+                    else if (!isSameRow && !isSameColumn && moveRobberLeft && isPlayerAbove && playerAtTopBorder)
+                    {
+                        int[] validMoves = [-11, -10, -9, 10, 9];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                    }
                     else if (!isSameRow && !isSameColumn && moveRobberLeft && isPlayerAbove)
                     {
                         int[] validMoves = [-11, -10, -9];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
-                    if (!isSameRow && !isSameColumn && moveRobberLeft && isPlayerBelow)
+                    else if (!isSameRow && !isSameColumn && moveRobberLeft && isPlayerBelow)
                     {
                         int[] validMoves = [-1, 9, 10];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
@@ -199,6 +204,11 @@ namespace CrimeCity.Classes
                         int[] validMoves = [-11, -1, 9, -10];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
+                    else if (isSameRow && !isSameColumn && moveRobberLeft && playerAtTopBorder)
+                    {
+                        int[] validMoves = [-11, -1, 9, 10];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                    }
                     else if (isSameRow && !isSameColumn && moveRobberLeft)
                     {
                         int[] validMoves = [-11, -1, 9];
@@ -206,7 +216,7 @@ namespace CrimeCity.Classes
                     }
                     else if (!isSameRow && isSameColumn && isPlayerBelow && playerAtLeftBorder)
                     {
-                        int[] validMoves = [1, 9, 10, 11 -1];
+                        int[] validMoves = [1, 9, 10, 11 - 1];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
                     else if (!isSameRow && isSameColumn && isPlayerBelow)
@@ -293,7 +303,7 @@ namespace CrimeCity.Classes
                     }
                     else if (!isSameRow && isSameColumn && isPlayerBelow)
                     {
-                        int[] validMoves = [10,11,1];
+                        int[] validMoves = [10, 11, 1];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
 
@@ -304,6 +314,11 @@ namespace CrimeCity.Classes
                     if (!isSameRow && !isSameColumn && moveRobberRight && isPlayerAbove && playerAtRightBorder)
                     {
                         int[] validMoves = [11, -10];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                    }
+                    else if (!isSameRow && !isSameColumn && moveRobberRight && isPlayerAbove && playerAtTopBorder)
+                    {
+                        int[] validMoves = [-10, -9, 1, 11];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
                     else if (!isSameRow && !isSameColumn && moveRobberRight && isPlayerAbove)
@@ -335,14 +350,14 @@ namespace CrimeCity.Classes
                 else if (!legalPositionsAroundRobber.Contains(-10))
                 {
                     ExLogger.Log($"-10", true);
-                    if (!isSameRow && isSameColumn && isPlayerAbove)
-                    {
-                        int[] validMoves = [-9, 1, -11, -1];
-                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
-                    }
-                    else if (!isSameRow && !isSameColumn && isPlayerAbove && moveRobberRight && playerAtRightBorder)
+                    if (!isSameRow && !isSameColumn && isPlayerAbove && moveRobberRight && playerAtRightBorder)
                     {
                         int[] validMoves = [-11];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                    }
+                    else if (!isSameRow && !isSameColumn && isPlayerAbove && moveRobberRight && playerAtTopBorder)
+                    {
+                        int[] validMoves = [-9, 1, -11];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
                     else if (!isSameRow && !isSameColumn && isPlayerAbove && moveRobberRight)
@@ -350,18 +365,32 @@ namespace CrimeCity.Classes
                         int[] validMoves = [-9, 1];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
+                    else if (!isSameRow && !isSameColumn && isPlayerAbove && moveRobberLeft && playerAtTopBorder)
+                    {
+                        int[] validMoves = [-1];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                    }
                     else if (!isSameRow && !isSameColumn && isPlayerAbove && moveRobberLeft)
                     {
-                        if (legalPositionsAroundRobber.Contains(-9))
-                        {
-                            newPosition = -9;
-                        }
+                        int[] validMoves = [-9];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
+                    else if (!isSameRow && isSameColumn && isPlayerAbove)
+                    {
+                        int[] validMoves = [-9, 1, -11, -1];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                    }
+
                 }
                 else if (!legalPositionsAroundRobber.Contains(-11))
                 {
                     ExLogger.Log($"-11", true);
-                    if (!isSameRow && !isSameColumn && isPlayerAbove && moveRobberLeft)
+                    if (!isSameRow && !isSameColumn && isPlayerAbove && moveRobberLeft && playerAtTopBorder)
+                    {
+                        int[] validMoves = [-1, -10, 9];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                    }
+                    else if (!isSameRow && !isSameColumn && isPlayerAbove && moveRobberLeft)
                     {
                         int[] validMoves = [-1, -10];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
@@ -441,13 +470,13 @@ namespace CrimeCity.Classes
             List<int> legalPositions = new List<int>();
             foreach (var validPosition in positions)
             {
-                 int newValidPosition = position + validPosition;
+                int newValidPosition = position + validPosition;
                 bool upperBound = newValidPosition > 0 && position > -1 && position < 10;
                 bool lowerBound = newValidPosition < 99 && position > 89 && position < 100;
                 bool inRange = newValidPosition > -1 && newValidPosition < 100;
                 bool isBorderPosition = Table.RightBorder.Contains(newValidPosition) || Table.LeftBoarder.Contains(newValidPosition);
-                bool isWarpPosition = 
-                    Table.LeftBoarder.Contains(position) && Table.RightBorder.Contains(newValidPosition) || 
+                bool isWarpPosition =
+                    Table.LeftBoarder.Contains(position) && Table.RightBorder.Contains(newValidPosition) ||
                     Table.RightBorder.Contains(position) && Table.LeftBoarder.Contains(newValidPosition);
                 if (upperBound && !isBorderPosition && !isWarpPosition && inRange)
                 {
