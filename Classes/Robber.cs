@@ -146,6 +146,7 @@ namespace CrimeCity.Classes
 
         private int DetermineBestMove(List<int> legalPositionsAroundPlayer, List<int> legalPositionsAroundRobber, Person player, bool isSameRow, bool isSameColumn, bool moveRobberLeft, bool moveRobberRight, bool isPlayerBelow, bool isPlayerAbove)
         {
+            bool playerAtRightBorder = Table.RightBorder.Contains(player.Position);
             int newPosition = 0;
             foreach (int l in legalPositionsAroundPlayer)
             {
@@ -175,6 +176,11 @@ namespace CrimeCity.Classes
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
 
                     }
+                    else if (!isSameRow && !isSameColumn && moveRobberRight && isPlayerAbove)
+                    {
+                        int[] validMoves = [-10, 1, 10, -9, 11];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                    }
                     else if (isSameRow && !isSameColumn && moveRobberLeft)
                     {
                         int[] validMoves = [-11, -1, 9, 10, 10];
@@ -190,9 +196,15 @@ namespace CrimeCity.Classes
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
 
                     }
+                    else if (!isSameRow && isSameColumn && isPlayerBelow && playerAtRightBorder)
+                    {
+                        int[] validMoves = [-1, 9, 10, 11, 1];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+
+                    }
                     else if (!isSameRow && isSameColumn && isPlayerBelow)
                     {
-                        int[] validMoves = [-1, 1];
+                        int[] validMoves = [9, 10, 11];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
 
                     }
@@ -207,14 +219,24 @@ namespace CrimeCity.Classes
                 else if (!legalPositionsAroundRobber.Contains(10))
                 {
                     ExLogger.Log($"10", true);
-                    if (!isSameRow && !isSameColumn && moveRobberRight && isPlayerBelow)
+                    if (playerAtRightBorder && !isSameColumn && isSameRow)
                     {
-                        int[] validMoves = [9, 1];
+                        int[] validMoves = [9, 11, -1, 1, 10];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                    }
+                    else if (playerAtRightBorder && !isSameRow && !isSameColumn && moveRobberRight && isPlayerBelow)
+                    {
+                        int[] validMoves = [9, 10, 11];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                    }
+                    else if (!isSameRow && !isSameColumn && moveRobberRight && isPlayerBelow)
+                    {
+                        int[] validMoves = [10, 11, 1];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
                     else if (!isSameRow && isSameColumn && isPlayerBelow)
                     {
-                        int[] validMoves = [9, 11, -1, 1, 10];
+                        int[] validMoves = [10,11,1];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
 
@@ -222,14 +244,19 @@ namespace CrimeCity.Classes
                 else if (!legalPositionsAroundRobber.Contains(1))
                 {
                     ExLogger.Log($"1", true);
-                    if (!isSameRow && !isSameColumn && moveRobberRight && isPlayerAbove)
+                    if (!isSameRow && !isSameColumn && moveRobberRight && isPlayerAbove && playerAtRightBorder)
                     {
-                        int[] validMoves = [-1, -11, -10];
+                        int[] validMoves = [11, -10];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                    }
+                    else if (!isSameRow && !isSameColumn && moveRobberRight && isPlayerAbove)
+                    {
+                        int[] validMoves = [-10, -9, 1];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
                     else if (!isSameRow && !isSameColumn && moveRobberRight && isPlayerBelow)
                     {
-                        int[] validMoves = [-9, 10];
+                        int[] validMoves = [-10, -9, 1, 11, 10];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
                     else if (!isSameRow && !isSameColumn && moveRobberLeft && isPlayerBelow)
@@ -254,6 +281,11 @@ namespace CrimeCity.Classes
                     if (!isSameRow && isSameColumn && isPlayerAbove)
                     {
                         int[] validMoves = [-9, 1, -11, -1];
+                        newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                    }
+                    else if (!isSameRow && !isSameColumn && isPlayerAbove && moveRobberRight && playerAtRightBorder)
+                    {
+                        int[] validMoves = [-11];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
                     else if (!isSameRow && !isSameColumn && isPlayerAbove && moveRobberRight)
@@ -283,7 +315,7 @@ namespace CrimeCity.Classes
                     ExLogger.Log($"11", true);
                     if (!isSameRow && !isSameColumn && isPlayerBelow)
                     {
-                        int[] validMoves = [1, 10];
+                        int[] validMoves = [-1, 9, 10, 11, 1];
                         newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
                     }
                 }
