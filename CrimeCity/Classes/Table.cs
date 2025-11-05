@@ -39,7 +39,7 @@ namespace CrimeCity.Classes
                 {
                     if (positionOnMap == robber.Position)
                     {
-                        if (Config.PlayerIndicators)
+                        if (Config.ShowRobberNames)
                             Console.Write(robber.FirstName);
                         else
                             Console.Write("Z");

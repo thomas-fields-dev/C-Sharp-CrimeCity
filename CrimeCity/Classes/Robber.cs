@@ -20,6 +20,8 @@ namespace CrimeCity.Classes
         }
         public string[,] Weapon { get; set; }
         public static int[]? RobberPositions { get; set; }
+        List<int> PreviousPositions { get; set; } = new List<int>();
+        List<int> BlockedPositions { get; set; } = new List<int>();
 
         public override void Move(Table table, Person player, EdgeRunner? edgeRunner = null, Robber[]? robbers = null, string input = "", int proximity = 0)
         {
@@ -94,7 +96,9 @@ namespace CrimeCity.Classes
                     newPosition = 0;
 
                 if (Position + newPosition == player.Position)
+                {
                     newPosition = 0;
+                }
 
                 if (newPosition != 0)
                 {
@@ -127,19 +131,44 @@ namespace CrimeCity.Classes
                             }
                             occupiedAroundPlayer.Add(0);
                         }
+
                         List<int> unoccupiedAroundPlayer = new List<int>();
                         unoccupiedAroundPlayer = Config.ValidProximities.Except(occupiedAroundPlayer.ToArray()).ToList();
 
-                        List<int> legalPositionsAroundPlayer = CheckBoundrys(unoccupiedAroundPlayer, player.Position);
+                        List<int> legalMovsAroundPlayer = CheckBoundrys(unoccupiedAroundPlayer, player.Position);
 
-                        string name = FirstName;
-                        if (legalPositionsAroundPlayer.Any())
+                        List<int> legalPositionsAroundRobberTemp = new List<int>();
+                        legalPositionsAroundRobberTemp.AddRange(legalPositionsAroundRobber);
+
+                        if (PreviousPositions.Any())
                         {
-                            newPosition = DetermineBestMove(legalPositionsAroundPlayer, legalPositionsAroundRobber, player, isSameRow, isSameColumn, moveRobberLeft, moveRobberRight, isPlayerBelow, isPlayerAbove);
+                            foreach (var move in legalPositionsAroundRobberTemp)
+                            {
+                                int possiblePosition = Position + move;
+                                if (PreviousPositions.Contains(possiblePosition))
+                                {
+                                    legalPositionsAroundRobber.Remove(move);
+                                }
+                            }
+                        }
+
+                        if (legalMovsAroundPlayer.Any())
+                        {
+                            newPosition = DetermineBestMove(legalMovsAroundPlayer, legalPositionsAroundRobber, player, isSameRow, isSameColumn, moveRobberLeft, moveRobberRight, isPlayerBelow, isPlayerAbove);
+                            if (PreviousPositions.Contains(Position + newPosition))
+                            {
+                                BlockedPositions.Add(Position + newPosition);
+                                PreviousPositions.Clear();
+                            }
+                            else
+                            {
+                                PreviousPositions.Add(Position + newPosition);
+                            }
                         }
                     }
                 }
                 Position += newPosition;
+
                 ExLogger.Log($"Robber {FirstName} position: {Position}", true);
             }
         }
@@ -220,48 +249,79 @@ namespace CrimeCity.Classes
             return newPosition;
         }
 
+        private int[] FilterValidMoves(int[] validMoves)
+        {
+            List<int> goodPositions = new List<int>();
+            foreach (int vm in validMoves)
+            {
+                int possiblePosition = Position + vm;
+                foreach (int move in Config.ValidProximities)
+                {
+                    if (RobberPositions != null)
+                    {
+                        foreach (int rp in Robber.RobberPositions)
+                        {
+                            if (rp == possiblePosition + move)
+                            {
+                                goodPositions.Add(vm);
+                            }
+                        }
+                    }
+                }
+            }
+            return goodPositions.Distinct().ToArray();
+        }
+
         private int UpdateNewPosition(bool moveNorthWest, bool moveNorthEast, bool moveSouthEast, bool moveSouthWest, bool moveNorth, bool moveSouth, bool moveEast, bool moveWest, List<int> legalPositionsAroundRobber)
         {
             int newPosition = 0;
             if (moveNorthWest)
             {
                 int[] validMoves = [9, -1, -11, -10, -9];
-                newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                int[] filteredValidMoves = FilterValidMoves(validMoves);
+                newPosition = GetRandomValidMove(legalPositionsAroundRobber, filteredValidMoves);
             }
             else if (moveNorthEast)
             {
                 int[] validMoves = [-11, -10, -9, 1, 11];
-                newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                int[] filteredValidMoves = FilterValidMoves(validMoves);
+                newPosition = GetRandomValidMove(legalPositionsAroundRobber, filteredValidMoves);
             }
             else if (moveSouthEast)
             {
                 int[] validMoves = [9, 10, 11, 1, -9];
-                newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                int[] filteredValidMoves = FilterValidMoves(validMoves);
+                newPosition = GetRandomValidMove(legalPositionsAroundRobber, filteredValidMoves);
             }
             else if (moveSouthWest)
             {
                 int[] validMoves = [-11, -1, 9, 10, 11];
-                newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                int[] filteredValidMoves = FilterValidMoves(validMoves);
+                newPosition = GetRandomValidMove(legalPositionsAroundRobber, filteredValidMoves);
             }
             else if (moveNorth)
             {
                 int[] validMoves = [-1, -11, -10, -9, 1];
-                newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                int[] filteredValidMoves = FilterValidMoves(validMoves);
+                newPosition = GetRandomValidMove(legalPositionsAroundRobber, filteredValidMoves);
             }
             else if (moveSouth)
             {
                 int[] validMoves = [-1, 9, 10, 11, 1];
-                newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                int[] filteredValidMoves = FilterValidMoves(validMoves);
+                newPosition = GetRandomValidMove(legalPositionsAroundRobber, filteredValidMoves);
             }
             else if (moveEast)
             {
                 int[] validMoves = [-10, -9, 1, 11, 10];
-                newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                int[] filteredValidMoves = FilterValidMoves(validMoves);
+                newPosition = GetRandomValidMove(legalPositionsAroundRobber, filteredValidMoves);
             }
             else if (moveWest)
             {
                 int[] validMoves = [10, 9, -1, -11, -10];
-                newPosition = GetRandomValidMove(legalPositionsAroundRobber, validMoves);
+                int[] filteredValidMoves = FilterValidMoves(validMoves);
+                newPosition = GetRandomValidMove(legalPositionsAroundRobber, filteredValidMoves);
             }
             return newPosition;
         }

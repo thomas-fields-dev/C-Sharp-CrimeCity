@@ -21,9 +21,8 @@ public class Program
         table.FillTable();
         Person player = new Person();
         EdgeRunner edgeRunner = new EdgeRunner();
-        int noOfRobbers = 5;
 
-        Robber[] robbers = new Robber[noOfRobbers];
+        Robber[] robbers = new Robber[Config.NoOfRobbers];
         for (int i = 0; i < robbers.Length; i++)
         {
             robbers[i] = new Robber() { FirstName = $"{i + 1}" };
@@ -46,15 +45,18 @@ public class Program
 
             if (Config.MoveMentTest)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(Config.SpeedDuringMoveTest);
                 List<int> occupiedAroundPlayer = new List<int>();
                 foreach (int vp in Config.ValidProximities)
                 {
-                    foreach (int p in Robber.RobberPositions)
+                    if (Robber.RobberPositions != null)
                     {
-                        if (p == player.Position + vp)
+                        foreach (int p in Robber.RobberPositions)
                         {
-                            occupiedAroundPlayer.Add(vp);
+                            if (p == player.Position + vp)
+                            {
+                                occupiedAroundPlayer.Add(vp);
+                            }
                         }
                     }
                     occupiedAroundPlayer.Add(0);
@@ -70,7 +72,10 @@ public class Program
                 }
             }
 
-            Console.WriteLine(Table.Message);
+            if (!Config.MoveMentTest)
+            {
+                Console.WriteLine(Table.Message);
+            }
 
             Table.Message = "";
 
@@ -79,11 +84,8 @@ public class Program
 
             ExLogger.Log("", true);
 
-            //Console.WriteLine("Old Moves:");
-            //table.Draw(player, edgeRunner, robbers);
             Console.WriteLine();
 
-            //ExLogger.Display();
             ExLogger.Clear();
 
         }
